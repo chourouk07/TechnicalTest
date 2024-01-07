@@ -53,7 +53,7 @@ public class WeaponSwitch : MonoBehaviour
             i++;
         }
     }
-
+    #region Enable-Disable
     private void OnEnable()
     {
         _playerInput.Player.Enable();
@@ -62,4 +62,5 @@ public class WeaponSwitch : MonoBehaviour
     {
         _playerInput.Player.Disable();
     }
+    #endregion
 }
