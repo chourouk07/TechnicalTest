@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -24,6 +25,7 @@ public class PlayerController : MonoBehaviour
     bool _isJumpPressed= false;
     bool _isJumping = false;
     [SerializeField] float _jumpHeight = 5f;
+    bool _isjumpAnimation= false;
     #endregion
     #region Animation
     int isWalkingHash;
@@ -93,6 +95,12 @@ public class PlayerController : MonoBehaviour
         float fallMultiplier = 3f;
         if (characterController.isGrounded)
         {
+            if (_isjumpAnimation)
+            {
+                animator.SetBool(isJumpingHash, false);
+                _isjumpAnimation= false;
+            }
+            
             float groundedGravity = -.05f;
             _movement.y = groundedGravity;
             _runMovement.y = groundedGravity;
@@ -138,6 +146,8 @@ public class PlayerController : MonoBehaviour
     {
         if (_isJumpPressed && characterController.isGrounded && !_isJumping)
         {
+            animator.SetBool(isJumpingHash, true);
+            _isjumpAnimation = true;
             _isJumping = true;
             float jumpVelocity = Mathf.Sqrt(2 * _jumpHeight * Mathf.Abs(Physics.gravity.y));
             _movement.y = jumpVelocity;
