@@ -7,9 +7,9 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     #region References
-    Input_Manager playerInput;
-    CharacterController characterController;
-    [SerializeField] Animator animator;
+    Input_Manager _playerInput;
+    CharacterController _characterController;
+    [SerializeField] Animator _animator;
     #endregion
     #region player movement variables
     Vector2 _movementInput;
@@ -29,30 +29,30 @@ public class PlayerController : MonoBehaviour
     bool _canDoubleJump;
     #endregion
     #region Animation
-    int isWalkingHash;
-    int isRunningHash;
-    int isJumpingHash;
-    int isDoubleJumpingHash;
+    int _isWalkingHash;
+    int _isRunningHash;
+    int _isJumpingHash;
+    int _isDoubleJumpingHash;
     #endregion
     private void Awake()
     {
         
-        playerInput = new Input_Manager();
-        characterController = GetComponent<CharacterController>();
+        _playerInput = new Input_Manager();
+        _characterController = GetComponent<CharacterController>();
         //set the player input callbacks
-        playerInput.Player.Move.started += OnMovementInput;
-        playerInput.Player.Move.canceled+= OnMovementInput;
-        playerInput.Player.Move.performed+= OnMovementInput;
-        playerInput.Player.Run.started += OnRun;
-        playerInput.Player.Run.canceled+= OnRun;
-        playerInput.Player.Jump.started += OnJump;
-        playerInput.Player.Jump.canceled += OnJump;
+        _playerInput.Player.Move.started += OnMovementInput;
+        _playerInput.Player.Move.canceled+= OnMovementInput;
+        _playerInput.Player.Move.performed+= OnMovementInput;
+        _playerInput.Player.Run.started += OnRun;
+        _playerInput.Player.Run.canceled+= OnRun;
+        _playerInput.Player.Jump.started += OnJump;
+        _playerInput.Player.Jump.canceled += OnJump;
 
         //animation hash
-        isWalkingHash = Animator.StringToHash("isWalking");
-        isRunningHash = Animator.StringToHash("isRunning");
-        isJumpingHash = Animator.StringToHash("isJumping");
-        isDoubleJumpingHash = Animator.StringToHash("isDoubleJumping");
+        _isWalkingHash = Animator.StringToHash("isWalking");
+        _isRunningHash = Animator.StringToHash("isRunning");
+        _isJumpingHash = Animator.StringToHash("isJumping");
+        _isDoubleJumpingHash = Animator.StringToHash("isDoubleJumping");
     }
 
     void OnRun(InputAction.CallbackContext ctx)
@@ -67,17 +67,17 @@ public class PlayerController : MonoBehaviour
 
     void HandleRotation()
     {
-        Vector3 _lookAtDirection;
+        Vector3 lookAtDirection;
 
-        _lookAtDirection.x = _movement.x;
-        _lookAtDirection.y = 0f;
-        _lookAtDirection.z = _movement.z;
+        lookAtDirection.x = _movement.x;
+        lookAtDirection.y = 0f;
+        lookAtDirection.z = _movement.z;
 
         Quaternion rotation = transform.rotation;
 
         if (_isMovementPressed )
         {
-            Quaternion targetRotation = Quaternion.LookRotation(_lookAtDirection);
+            Quaternion targetRotation = Quaternion.LookRotation(lookAtDirection);
             transform.rotation = Quaternion.Slerp(rotation, targetRotation, _rotationSpeed* Time.deltaTime);
         }
     }
@@ -96,14 +96,14 @@ public class PlayerController : MonoBehaviour
     {
         bool isFalling = _movement.y <= 0f;
         float fallMultiplier = 3f;
-        if (characterController.isGrounded)
+        if (_characterController.isGrounded)
         {
             if (_isjumpAnimation)
             {
-                animator.SetBool(isJumpingHash, false);
+                _animator.SetBool(_isJumpingHash, false);
                 _isjumpAnimation= false;
             }
-            animator.SetBool (isDoubleJumpingHash, false);
+            _animator.SetBool (_isDoubleJumpingHash, false);
             float groundedGravity = -.05f;
             _movement.y = groundedGravity;
             _runMovement.y = groundedGravity;
@@ -127,25 +127,25 @@ public class PlayerController : MonoBehaviour
     }
     void HandleAnimation()
     {
-        bool isWalking = animator.GetBool(isWalkingHash);
-        bool isRunning = animator.GetBool(isRunningHash);
+        bool isWalking = _animator.GetBool(_isWalkingHash);
+        bool isRunning = _animator.GetBool(_isRunningHash);
 
         if (_isMovementPressed && !isWalking)
         {
-            animator.SetBool("isWalking", true);
+            _animator.SetBool("isWalking", true);
         }
         else if (!_isMovementPressed && isWalking)
         {
-            animator.SetBool("isWalking", false);
+            _animator.SetBool("isWalking", false);
         }
 
         if ((_isMovementPressed && _isRunPressed)   && !isRunning)
         {
-            animator.SetBool(isRunningHash, true);
+            _animator.SetBool(_isRunningHash, true);
         }
         else if ((!_isMovementPressed || !_isRunPressed) && isRunning)
         {
-            animator.SetBool(isRunningHash, false);
+            _animator.SetBool(_isRunningHash, false);
         }
     }
 
@@ -153,9 +153,9 @@ public class PlayerController : MonoBehaviour
     {
         if (_isJumpPressed)
         {
-            if (characterController.isGrounded && !_isJumping)
+            if (_characterController.isGrounded && !_isJumping)
             {
-                animator.SetBool(isJumpingHash, true);
+                _animator.SetBool(_isJumpingHash, true);
                 _isjumpAnimation = true;
                 _isJumping = true;
                 float jumpVelocity = Mathf.Sqrt(2 * _jumpHeight * Mathf.Abs(Physics.gravity.y));
@@ -165,7 +165,7 @@ public class PlayerController : MonoBehaviour
             }
             if (!_isJumping && _canDoubleJump)
             {
-                animator.SetBool(isDoubleJumpingHash, true);
+                _animator.SetBool(_isDoubleJumpingHash, true);
                 _isJumping = true;
                 float jumpVelocity = Mathf.Sqrt(2 * _jumpHeight * Mathf.Abs(Physics.gravity.y));
                 _movement.y = jumpVelocity;
@@ -188,11 +188,11 @@ public class PlayerController : MonoBehaviour
         
         if (_isRunPressed)
         {
-            characterController.Move(_runMovement * Time.deltaTime);
+            _characterController.Move(_runMovement * Time.deltaTime);
         }
         else
         {
-            characterController.Move(_movement * Time.deltaTime);
+            _characterController.Move(_movement * Time.deltaTime);
         }
 
         HandleGravity();
@@ -200,10 +200,10 @@ public class PlayerController : MonoBehaviour
     }
     private void OnEnable()
     {
-        playerInput.Player.Enable();
+        _playerInput.Player.Enable();
     }
     private void OnDisable()
     {
-        playerInput.Player.Disable();
+        _playerInput.Player.Disable();
     }
 }
