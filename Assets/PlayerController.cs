@@ -26,6 +26,7 @@ public class PlayerController : MonoBehaviour
     bool _isJumping = false;
     [SerializeField] float _jumpHeight = 5f;
     bool _isjumpAnimation= false;
+    bool _canDoubleJump;
     #endregion
     #region Animation
     int isWalkingHash;
@@ -104,6 +105,10 @@ public class PlayerController : MonoBehaviour
             float groundedGravity = -.05f;
             _movement.y = groundedGravity;
             _runMovement.y = groundedGravity;
+            if (!_isJumpPressed)
+            {
+                _canDoubleJump= false;
+            }
         }
         else if (isFalling)
         {
@@ -144,16 +149,20 @@ public class PlayerController : MonoBehaviour
 
     void HandleJump()
     {
-        if (_isJumpPressed && characterController.isGrounded && !_isJumping)
+        if (_isJumpPressed)
         {
-            animator.SetBool(isJumpingHash, true);
-            _isjumpAnimation = true;
-            _isJumping = true;
-            float jumpVelocity = Mathf.Sqrt(2 * _jumpHeight * Mathf.Abs(Physics.gravity.y));
-            _movement.y = jumpVelocity;
-            _runMovement.y = jumpVelocity;
+            if (characterController.isGrounded && !_isJumping || !_isJumping && _canDoubleJump)
+            {
+                animator.SetBool(isJumpingHash, true);
+                _isjumpAnimation = true;
+                _isJumping = true;
+                float jumpVelocity = Mathf.Sqrt(2 * _jumpHeight * Mathf.Abs(Physics.gravity.y));
+                _movement.y = jumpVelocity;
+                _runMovement.y = jumpVelocity;
+                _canDoubleJump = !_canDoubleJump;
+            }
+            
         }
-
         if (!_isJumpPressed && _isJumping)
         {
             _isJumping = false;
