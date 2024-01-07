@@ -32,6 +32,7 @@ public class PlayerController : MonoBehaviour
     int isWalkingHash;
     int isRunningHash;
     int isJumpingHash;
+    int isDoubleJumpingHash;
     #endregion
     private void Awake()
     {
@@ -51,6 +52,7 @@ public class PlayerController : MonoBehaviour
         isWalkingHash = Animator.StringToHash("isWalking");
         isRunningHash = Animator.StringToHash("isRunning");
         isJumpingHash = Animator.StringToHash("isJumping");
+        isDoubleJumpingHash = Animator.StringToHash("isDoubleJumping");
     }
 
     void OnRun(InputAction.CallbackContext ctx)
@@ -101,13 +103,13 @@ public class PlayerController : MonoBehaviour
                 animator.SetBool(isJumpingHash, false);
                 _isjumpAnimation= false;
             }
-            
+            animator.SetBool (isDoubleJumpingHash, false);
             float groundedGravity = -.05f;
             _movement.y = groundedGravity;
             _runMovement.y = groundedGravity;
             if (!_isJumpPressed)
             {
-                _canDoubleJump= false;
+                _canDoubleJump = false;
             }
         }
         else if (isFalling)
@@ -151,7 +153,7 @@ public class PlayerController : MonoBehaviour
     {
         if (_isJumpPressed)
         {
-            if (characterController.isGrounded && !_isJumping || !_isJumping && _canDoubleJump)
+            if (characterController.isGrounded && !_isJumping)
             {
                 animator.SetBool(isJumpingHash, true);
                 _isjumpAnimation = true;
@@ -159,15 +161,24 @@ public class PlayerController : MonoBehaviour
                 float jumpVelocity = Mathf.Sqrt(2 * _jumpHeight * Mathf.Abs(Physics.gravity.y));
                 _movement.y = jumpVelocity;
                 _runMovement.y = jumpVelocity;
-                _canDoubleJump = !_canDoubleJump;
+                _canDoubleJump = true;
             }
-            
+            if (!_isJumping && _canDoubleJump)
+            {
+                animator.SetBool(isDoubleJumpingHash, true);
+                _isJumping = true;
+                float jumpVelocity = Mathf.Sqrt(2 * _jumpHeight * Mathf.Abs(Physics.gravity.y));
+                _movement.y = jumpVelocity;
+                _canDoubleJump = false;
+            }
         }
         if (!_isJumpPressed && _isJumping)
         {
             _isJumping = false;
         }
     }
+
+
     private void Update()
     {
         
