@@ -5,14 +5,11 @@ using UnityEngine.InputSystem;
 public class PickupController : MonoBehaviour
 {
     [SerializeField] private Transform _player, _weaponContainer;
-    //Input_Manager _playerInput;
     [SerializeField] private float _pickupRange;
     private Rigidbody _rb;
     private BoxCollider _collider;
     [SerializeField] private bool _isEquiped;
     static bool _isSlotFull;
-/* bool _isPickPressed;
-    bool _isDropPressed;*/
     private void Awake()
     {
         //_playerInput = new Input_Manager();
@@ -22,22 +19,8 @@ public class PickupController : MonoBehaviour
         {
             _isSlotFull= true;
         }
-/*
-        _playerInput.Player.PickUp.started += OnPick;
-        _playerInput.Player.Run.canceled += OnPick;
-        _playerInput.Player.DropDown.started += OnDrop;
-        _playerInput.Player.DropDown.canceled += OnDrop;*/
     }
 
-/*    void OnPick(InputAction.CallbackContext ctx)
-    {
-        _isPickPressed = ctx.ReadValueAsButton();
-    }
-
-    void OnDrop(InputAction.CallbackContext ctx)
-    {
-        _isDropPressed = ctx.ReadValueAsButton();
-    }*/
     private void Update()
     {
         Vector3 distanceToPlayer = _player.position - transform.position;
@@ -68,13 +51,4 @@ public class PickupController : MonoBehaviour
         _rb.useGravity = true;
 
     }
-
- /*   private void OnEnable()
-    {
-        _playerInput.Player.Enable();
-    }
-    private void OnDisable()
-    {
-        _playerInput.Player.Disable();
-    }*/
 }
