@@ -33,7 +33,6 @@ public class PlayerController : MonoBehaviour
     #endregion
     private void Awake()
     {
-        
         _playerInput = new Input_Manager();
         _characterController = GetComponent<CharacterController>();
         //set the player input callbacks
