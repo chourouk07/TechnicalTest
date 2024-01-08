@@ -12,7 +12,6 @@ public class PickupController : MonoBehaviour
     static bool _isSlotFull;
     private void Awake()
     {
-        //_playerInput = new Input_Manager();
         _collider = GetComponent<BoxCollider>();
         _rb= GetComponent<Rigidbody>();
         if (_isEquiped)
@@ -24,7 +23,7 @@ public class PickupController : MonoBehaviour
     private void Update()
     {
         Vector3 distanceToPlayer = _player.position - transform.position;
-        if (!_isEquiped && distanceToPlayer.magnitude <= _pickupRange && Keyboard.current.eKey.wasPressedThisFrame)
+        if (!_isEquiped && distanceToPlayer.magnitude <= _pickupRange && Keyboard.current.eKey.wasPressedThisFrame && !_isSlotFull)
             PickUp();
         if (_isEquiped && Keyboard.current.qKey.wasPressedThisFrame)
             Drop();
