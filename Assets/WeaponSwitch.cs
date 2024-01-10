@@ -42,9 +42,11 @@ public class WeaponSwitch : MonoBehaviour
         int i = 0;
         foreach (Transform weapon in transform)
         {
+            var interactable = weapon.GetComponent<IWeapon>();
             if (i == _selectedWeapon)
             {
                 weapon.gameObject.SetActive(true);
+                interactable.ActivateWeapon(this);
             }
             else
             {

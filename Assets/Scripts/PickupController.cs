@@ -9,21 +9,16 @@ public class PickupController : MonoBehaviour
     private Rigidbody _rb;
     private BoxCollider _collider;
     [SerializeField] private bool _isEquiped;
-    static bool _isSlotFull;
     private void Awake()
     {
         _collider = GetComponent<BoxCollider>();
         _rb= GetComponent<Rigidbody>();
-        if (_isEquiped)
-        {
-            _isSlotFull= true;
-        }
     }
 
     private void Update()
     {
         Vector3 distanceToPlayer = _player.position - transform.position;
-        if (!_isEquiped && distanceToPlayer.magnitude <= _pickupRange && Keyboard.current.eKey.wasPressedThisFrame && !_isSlotFull)
+        if (!_isEquiped && distanceToPlayer.magnitude <= _pickupRange && Keyboard.current.eKey.wasPressedThisFrame)
             PickUp();
         if (_isEquiped && Keyboard.current.qKey.wasPressedThisFrame)
             Drop();
@@ -31,20 +26,21 @@ public class PickupController : MonoBehaviour
     }
     private void PickUp()
     {
-        _isEquiped = true;
-        _isSlotFull = true;
-        _collider.isTrigger = true;
-        _rb.useGravity = false;
-        transform.SetParent(_weaponContainer);
-        transform.localPosition = Vector3.zero;
-        transform.localRotation = Quaternion.Euler(Vector3.zero);
-        transform.localScale = Vector3.one;
+        if (_weaponContainer.childCount == 0)
+        {
+            _isEquiped = true;
+            _collider.isTrigger = true;
+            _rb.useGravity = false;
+            transform.SetParent(_weaponContainer);
+            transform.localPosition = Vector3.zero;
+            transform.localRotation = Quaternion.Euler(Vector3.zero);
+            transform.localScale = Vector3.one;
+        }
 
     }
     private void Drop() 
     {
         _isEquiped = false;
-        _isSlotFull = false;
         transform.SetParent(null);
         _collider.isTrigger= false;
         _rb.useGravity = true;
