@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 
 public class SwordAttackController : MonoBehaviour, IWeapon
 {
+    Input_Manager _playerInput;
     public List<SwordSO> Combo;
     float lastClickedTime;
     int comboCounter;
@@ -11,16 +12,29 @@ public class SwordAttackController : MonoBehaviour, IWeapon
     float comboCooldown = 0.35f;
     float lastComboTime;
 
-    float _damage; 
+    float _damage;
+    bool _isAttackPressed;
     string _weapnName; 
     public string WeaponName =>_weapnName;
     public bool ActivateWeapon(WeaponSwitch weaponSwitch)
     {
         return true;
     }
+    private void Awake()
+    {
+        _playerInput = new Input_Manager();
+
+        _playerInput.Player.Attack.started +=OnAttack;
+        _playerInput.Player.Attack.canceled += OnAttack;
+    }
+
+    void OnAttack(InputAction.CallbackContext ctx)
+    {
+        _isAttackPressed = ctx.ReadValueAsButton();
+    }
     private void Update()
     {
-        if (Keyboard.current.xKey.wasPressedThisFrame)
+        if (_isAttackPressed)
         {
             Attack();
         }
@@ -67,6 +81,15 @@ public class SwordAttackController : MonoBehaviour, IWeapon
             Debug.Log("Attack Enemy , Damage = "+ _damage);
         }
     
+    }
+
+    private void OnEnable()
+    {
+        _playerInput.Player.Enable();
+    }
+    private void OnDisable()
+    {
+        _playerInput.Player.Disable();
     }
 
 }

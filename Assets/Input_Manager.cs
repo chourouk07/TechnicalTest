@@ -89,6 +89,24 @@ public partial class @Input_Manager: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Aim"",
+                    ""type"": ""Button"",
+                    ""id"": ""0dc16bae-69e7-47f2-ae6f-338014a40012"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MouseDelta"",
+                    ""type"": ""Value"",
+                    ""id"": ""b5714139-edb7-4b53-8142-1e5daa6b12bf"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -212,6 +230,28 @@ public partial class @Input_Manager: IInputActionCollection2, IDisposable
                     ""action"": ""DropDown"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4cac5e96-f7b6-4ceb-82aa-4791d1727a82"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Aim"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9ae092d8-96ef-408e-a153-820fb8afc3ba"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MouseDelta"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -227,6 +267,8 @@ public partial class @Input_Manager: IInputActionCollection2, IDisposable
         m_Player_Switch = m_Player.FindAction("Switch", throwIfNotFound: true);
         m_Player_PickUp = m_Player.FindAction("PickUp", throwIfNotFound: true);
         m_Player_DropDown = m_Player.FindAction("DropDown", throwIfNotFound: true);
+        m_Player_Aim = m_Player.FindAction("Aim", throwIfNotFound: true);
+        m_Player_MouseDelta = m_Player.FindAction("MouseDelta", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -295,6 +337,8 @@ public partial class @Input_Manager: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Switch;
     private readonly InputAction m_Player_PickUp;
     private readonly InputAction m_Player_DropDown;
+    private readonly InputAction m_Player_Aim;
+    private readonly InputAction m_Player_MouseDelta;
     public struct PlayerActions
     {
         private @Input_Manager m_Wrapper;
@@ -306,6 +350,8 @@ public partial class @Input_Manager: IInputActionCollection2, IDisposable
         public InputAction @Switch => m_Wrapper.m_Player_Switch;
         public InputAction @PickUp => m_Wrapper.m_Player_PickUp;
         public InputAction @DropDown => m_Wrapper.m_Player_DropDown;
+        public InputAction @Aim => m_Wrapper.m_Player_Aim;
+        public InputAction @MouseDelta => m_Wrapper.m_Player_MouseDelta;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -336,6 +382,12 @@ public partial class @Input_Manager: IInputActionCollection2, IDisposable
             @DropDown.started += instance.OnDropDown;
             @DropDown.performed += instance.OnDropDown;
             @DropDown.canceled += instance.OnDropDown;
+            @Aim.started += instance.OnAim;
+            @Aim.performed += instance.OnAim;
+            @Aim.canceled += instance.OnAim;
+            @MouseDelta.started += instance.OnMouseDelta;
+            @MouseDelta.performed += instance.OnMouseDelta;
+            @MouseDelta.canceled += instance.OnMouseDelta;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -361,6 +413,12 @@ public partial class @Input_Manager: IInputActionCollection2, IDisposable
             @DropDown.started -= instance.OnDropDown;
             @DropDown.performed -= instance.OnDropDown;
             @DropDown.canceled -= instance.OnDropDown;
+            @Aim.started -= instance.OnAim;
+            @Aim.performed -= instance.OnAim;
+            @Aim.canceled -= instance.OnAim;
+            @MouseDelta.started -= instance.OnMouseDelta;
+            @MouseDelta.performed -= instance.OnMouseDelta;
+            @MouseDelta.canceled -= instance.OnMouseDelta;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -387,5 +445,7 @@ public partial class @Input_Manager: IInputActionCollection2, IDisposable
         void OnSwitch(InputAction.CallbackContext context);
         void OnPickUp(InputAction.CallbackContext context);
         void OnDropDown(InputAction.CallbackContext context);
+        void OnAim(InputAction.CallbackContext context);
+        void OnMouseDelta(InputAction.CallbackContext context);
     }
 }
