@@ -8,6 +8,8 @@ public class GunAttackController : MonoBehaviour, IWeapon
     Input_Manager _playerInput;
     [SerializeField] Animator _animator;
     [SerializeField] GameObject _player;
+    [SerializeField] Transform _shootingPoint;
+    [SerializeField] AnimatorOverrideController _animatorOverride;
     string _weaponName;
     bool _isAttackPressed;
     bool _isAimPressed;
@@ -27,7 +29,7 @@ public class GunAttackController : MonoBehaviour, IWeapon
     {
         _playerInput = new Input_Manager();
 
-        _playerInput.Player.Attack.started += OnAttack;
+        _playerInput.Player.Attack.started+= OnAttack;
         _playerInput.Player.Attack.canceled += OnAttack;
 
         _playerInput.Player.Aim.performed += OnAim;
@@ -47,24 +49,15 @@ public class GunAttackController : MonoBehaviour, IWeapon
     void MoveCrosshair()
     {
         _mouseDelta = _playerInput.Player.MouseDelta.ReadValue<Vector2>();
-
-        // Calculate the new local rotation around the y-axis based on the mouse movement
-        float newYRotation = _crosshair.transform.localRotation.eulerAngles.y + _mouseDelta.x * Time.deltaTime * 50f;
-
-        // Normalize the rotation to be within the range [0, 360)
+        float newYRotation = _player.transform.localRotation.eulerAngles.y + _mouseDelta.x * Time.deltaTime * 50f;
         newYRotation = Mathf.Repeat(newYRotation, 360f);
-
-        // Convert the normalized rotation to the range [-180, 180)
         if (newYRotation > 180f)
         {
             newYRotation -= 360f;
         }
+        newYRotation = Mathf.Clamp(newYRotation, -360f, 360f);
 
-        // Clamp the local rotation to stay within the specified range (-80 to 80 degrees)
-        newYRotation = Mathf.Clamp(newYRotation, -40f, 40f);
-
-        // Set the new local rotation of the crosshair
-        _crosshair.transform.localRotation = Quaternion.Euler(0f, newYRotation, 0f);
+        //_crosshair.transform.localRotation = Quaternion.Euler(0f, newYRotation, 0f);
         _player.transform.rotation = Quaternion.Euler(0f, newYRotation, 0f);
     }
     private void Update()
@@ -74,6 +67,12 @@ public class GunAttackController : MonoBehaviour, IWeapon
             _animator.SetBool("isAiming", true);
             _crosshair.SetActive(true);
             MoveCrosshair();
+            if (Mouse.current.leftButton.wasPressedThisFrame)
+            {
+                _animator.SetTrigger("isShooting");
+                GameObject bullet = Instantiate(_bulletPrefab, _shootingPoint.position, _shootingPoint.rotation);
+                
+            }
         }
         else
         {

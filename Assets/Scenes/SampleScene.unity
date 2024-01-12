@@ -1474,6 +1474,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4947743726954784, guid: 63ce2b31e16acab4d8a41f884c36333c, type: 3}
   m_PrefabInstance: {fileID: 310367967}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &319068012
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 319068013}
+  m_Layer: 0
+  m_Name: ShootingPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &319068013
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 319068012}
+  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+  m_LocalPosition: {x: -0.006713867, y: 0.347, z: 1.0300008}
+  m_LocalScale: {x: 2.1932006, y: 2.1932006, z: 2.1932008}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2039979815}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!1001 &324428054
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6017,8 +6048,8 @@ Animator:
   m_StabilizeFeet: 0
   m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
     are already bound by a Humanoid avatar. These transforms can only be changed
-    by Humanoid clips.\n\tTransform 'spine_01'\n\tFrom animation clip 'ShootSingleshot_HG01'\n\tFrom
-    animation clip 'ShootSingleshot_HG01'\n\tFrom animation clip 'AimAnim'"
+    by Humanoid clips.\n\tTransform 'spine_01'\n\tFrom animation clip 'AimAnim'\n\tFrom
+    animation clip 'ShootSingleshot_HG01'"
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -9406,7 +9437,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1589441081
 Transform:
   m_ObjectHideFlags: 0
@@ -9437,8 +9468,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _animator: {fileID: 1123963686}
   _player: {fileID: 1522126195}
+  _shootingPoint: {fileID: 319068013}
+  _animatorOverride: {fileID: 22100000, guid: e5f7bfe23f7321841981f8be81838846, type: 2}
   _crosshair: {fileID: 1121591189}
-  _bulletPrefab: {fileID: 0}
+  _bulletPrefab: {fileID: 6763399721167544138, guid: f8541cb78c620c643bdbde88e8382325, type: 3}
 --- !u!1001 &1597318862
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12976,7 +13009,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c5677fcc6d2a9064e86313d5bb2428a9, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.58
+      value: -0.739
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c5677fcc6d2a9064e86313d5bb2428a9, type: 3}
       propertyPath: m_LocalPosition.z
