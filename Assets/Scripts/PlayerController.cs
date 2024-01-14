@@ -1,5 +1,7 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -18,6 +20,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float _movementSpeed = 5f;
     [SerializeField] float _runSpeedMultiplier = 2.0f;
     float _rotationSpeed = 15f;
+    public Transform RespawnPoint;
     //jumping 
     bool _isJumpPressed= false;
     bool _isJumping = false;
@@ -218,6 +221,7 @@ public class PlayerController : MonoBehaviour
         HandleGravity();
         HandleJump();
     }
+    
      public void SetSpeed(float newSpeed)
     {
         _movementSpeed += newSpeed;
@@ -228,6 +232,16 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("Shop"))
         {
             _isShopOpen= true;
+        }
+        if (other.CompareTag("Water"))
+        {
+            // Move the player to the respawn point
+            gameObject.transform.position = RespawnPoint.position;
+
+            // You may also want to reset the player's rotation or any other relevant state
+            gameObject.transform.rotation = RespawnPoint.rotation;
+
+            // Add any additional logic needed for respawn
         }
     }
 

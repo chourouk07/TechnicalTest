@@ -10,6 +10,7 @@ TagManager:
   - WeaponContainer
   - Gold
   - Shop
+  - Water
   layers:
   - Default
   - TransparentFX

@@ -15,6 +15,8 @@ public class CharacterStats : MonoBehaviour
     [SerializeField] GameObject _weaponPrefab;
     [SerializeField] GameObject _goldPrefab;
     [SerializeField] Text _healthTxt;
+    [SerializeField] GameObject _vfxHit;
+    [SerializeField] GameObject _vfxDead;
 
     [SerializeField] private float currentHealth;
 
@@ -44,11 +46,12 @@ public class CharacterStats : MonoBehaviour
         else if (transform.CompareTag("Enemy"))
         {
             AnimationsController animationsController = transform.GetComponent<AnimationsController>();
-
             if (animationsController != null)
             {
                 animationsController.Hit();
             }
+            if (_vfxHit!= null)
+            Instantiate(_vfxHit,transform.position, Quaternion.identity);
         }
 
         if (currentHealth <= 0)
@@ -74,6 +77,8 @@ public class CharacterStats : MonoBehaviour
         if (gameObject.layer == LayerMask.NameToLayer("Mineral"))
         {
             gameObject.SetActive(false);
+            if (_vfxDead != null)
+            Instantiate(_vfxDead, transform.position, Quaternion.identity);
         }
     }
 
