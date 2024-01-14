@@ -13,8 +13,10 @@ public class SwordAttackController : MonoBehaviour, IWeapon
     float lastComboTime;
 
     float _damage;
+    float _damageOffset = 0f;
     bool _isAttackPressed;
-    string _weapnName; 
+    string _weapnName;
+
     public string WeaponName =>_weapnName;
     public bool ActivateWeapon(WeaponSwitch weaponSwitch)
     {
@@ -59,7 +61,7 @@ public class SwordAttackController : MonoBehaviour, IWeapon
             {
                 _anim.Play("SwordAttack", 0, 0);
             }
-            _damage = Combo[comboCounter].damage;
+            _damage = Combo[comboCounter].damage + _damageOffset;
             //add VFX
             comboCounter++;
             lastClickedTime = Time.time;
@@ -77,12 +79,16 @@ public class SwordAttackController : MonoBehaviour, IWeapon
     {
         if (other.gameObject.CompareTag("Enemy"))
         {
-            //other.gameObject.GetComponent<EnemyHealth>().TakeDamage(_damage);
-            Debug.Log("Attack Enemy , Damage = "+ _damage);
+            Debug.Log("Attack Enemy , Damage = " + _damage);
+            other.gameObject.GetComponent<CharacterStats>().ChangeHealth(-_damage);
         }
     
     }
-
+    public void SetDamageOffset(float newOffset)
+    {
+        _damageOffset += newOffset;
+    }
+    #region Enable/Disable
     private void OnEnable()
     {
         _playerInput.Player.Enable();
@@ -91,5 +97,5 @@ public class SwordAttackController : MonoBehaviour, IWeapon
     {
         _playerInput.Player.Disable();
     }
-
+    #endregion
 }

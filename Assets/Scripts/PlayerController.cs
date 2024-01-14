@@ -24,6 +24,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float _jumpHeight = 5f;
     bool _isjumpAnimation= false;
     bool _canDoubleJump;
+
+    //Shop
+    bool _isShopOpen = false;
+    bool _isInteractPressed = false;
+    int oldGold;
     #endregion
     #region Animation
     int _isWalkingHash;
@@ -43,13 +48,15 @@ public class PlayerController : MonoBehaviour
         _playerInput.Player.Run.canceled+= OnRun;
         _playerInput.Player.Jump.started += OnJump;
         _playerInput.Player.Jump.canceled += OnJump;
-
+        _playerInput.Player.PickUp.started += OnInteract;
+        _playerInput.Player.PickUp.canceled += OnInteract;
         //animation hash
         _isWalkingHash = Animator.StringToHash("isWalking");
         _isRunningHash = Animator.StringToHash("isRunning");
         _isJumpingHash = Animator.StringToHash("isJumping");
         _isDoubleJumpingHash = Animator.StringToHash("isDoubleJumping");
     }
+
 
     void OnRun(InputAction.CallbackContext ctx)
     {
@@ -60,7 +67,10 @@ public class PlayerController : MonoBehaviour
     {
             _isJumpPressed = ctx.ReadValueAsButton();
     }
-
+    void OnInteract(InputAction.CallbackContext ctx)
+    {
+        _isInteractPressed = ctx.ReadValueAsButton();
+    }
     void HandleRotation()
     {
         Vector3 lookAtDirection;
@@ -174,12 +184,27 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void HandeShop()
+    {
+        
+        if (_isShopOpen && _isInteractPressed)
+        {
+            LevelManager.instance.ToggleShop(true);
+            oldGold = LevelManager.instance.GetGold();
+        }
+        else if (Keyboard.current.escapeKey.wasPressedThisFrame)
+        {
+            LevelManager.instance.ToggleShop(false);
+            LevelManager.instance.ResetQuantities();
+            LevelManager.instance.ResetGold(oldGold);
+        }
+    }
 
     private void Update()
     {
         HandleRotation();
         HandleAnimation();
-
+        HandeShop();
         
         if (_isRunPressed)
         {
@@ -193,6 +218,28 @@ public class PlayerController : MonoBehaviour
         HandleGravity();
         HandleJump();
     }
+     public void SetSpeed(float newSpeed)
+    {
+        _movementSpeed += newSpeed;
+    }
+    #region Shop
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Shop"))
+        {
+            _isShopOpen= true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Shop"))
+        {
+            _isShopOpen = false;
+        }
+    }
+    #endregion
+    #region Enable/Disable
     private void OnEnable()
     {
         _playerInput.Player.Enable();
@@ -201,4 +248,5 @@ public class PlayerController : MonoBehaviour
     {
         _playerInput.Player.Disable();
     }
+    #endregion
 }

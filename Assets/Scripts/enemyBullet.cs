@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bullet : MonoBehaviour
+public class enemyBullet : MonoBehaviour
 {
     private Rigidbody bulletRigidbody;
-    // Start is called before the first frame update
+    [SerializeField] float _damage;
+
     void Awake()
     {
         bulletRigidbody = GetComponent<Rigidbody>();
@@ -21,9 +22,9 @@ public class Bullet : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Enemy"))
+        if (other.gameObject.CompareTag("Player"))
         {
-            Debug.Log("Hit Enemy");
+            other.gameObject.GetComponent<CharacterStats>().ChangeHealth(-_damage);
             Destroy(gameObject);
         }
         Destroy(gameObject);

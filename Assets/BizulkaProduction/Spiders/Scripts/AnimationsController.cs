@@ -9,7 +9,9 @@ public class AnimationsController : MonoBehaviour
     private static readonly int AttackHash = Animator.StringToHash("Attack");
     private static readonly int HitHash = Animator.StringToHash("Hit");
     private static readonly int IsDeadHash = Animator.StringToHash("IsDead");
+    private static readonly int ReloadHash = Animator.StringToHash("Reload");
     [SerializeField] SpiderAttack spiderAttack;
+
     private Vector3 _lastPosition;
     private Quaternion _lastRotation;
 
@@ -74,11 +76,16 @@ public class AnimationsController : MonoBehaviour
         _animator.SetTrigger(HitHash);
     }
 
+    public void Reload()
+    {
+        _animator.SetTrigger(ReloadHash);
+    }
+
     public bool IsMoving
     {
         get { return _animator.GetBool(MovingHash); }
     }
-
+    
     public void OnAttack()
     { 
         if (spiderAttack != null)
@@ -86,7 +93,8 @@ public class AnimationsController : MonoBehaviour
             if (spiderAttack.IsDamaging())
             {
                 Debug.Log("Attacking Player");
-                //reduce player health + play sound + play hit animation player
+                float _damage = gameObject.GetComponent<CharacterStats>().GetPower();
+                LevelManager.instance.player.GetComponent<CharacterStats>().ChangeHealth(-_damage);
             }
         }
     }
